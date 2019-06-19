@@ -1,0 +1,67 @@
+.Dd June 19, 2019
+.Dt SRCRR 1
+.\" NAME
+.Sh NAME
+.Nm srcrr
+.Nd load a development project shell context
+.\" SYNOPSIS
+.Sh SYNOPSIS
+.Nm
+.Op Fl v
+.Ar project_name
+.Nm
+.Fl l
+.Nm
+.Fl h
+.\" DESCRIPTION
+.Sh DESCRIPTION
+.Nm
+searches a set of directories, defined in the
+.Ev SRCPATH
+environment variable, for a project directory matching the given
+.Ar project_name .
+Once found, it prints to standard output the shell commands necessary to change
+directories to that project and source an optional initialization file, if one
+exists, named
+.Pa .srcrrrc .
+.Pp
+The shell code emitted by this program can be loaded into the current shell
+session using
+.Xr eval 1
+or similar. A shell function named
+.Em src
+is typically provided alongside this program to do so automatically.
+.Pp
+The
+.Ev SRCPATH
+environment variable is similar to the
+.Ev PATH
+variable. It consists of a list of one or more directories, each separated by a
+single colon character, that are searched in left-to-right order.
+.Pp
+It is not an error for a non-existent directory to be listed in the
+.Ev SRCPATH .
+.\" OPTIONS
+.Sh OPTIONS
+.Bl -tag -compact -offset indent
+.It Fl v
+print verbose information on standard error
+.It Fl l
+list all project directories
+.It Fl h
+display this help
+.El
+.\" ENVIRONMENT
+.Sh ENVIRONMENT
+.Bl -tag -compact -offset indent -width XXXXXXXXXX
+.It SRCPATH
+List of directories in which to search for projects.
+.El
+.\" AUTHORS
+.Sh AUTHORS
+.Bl -diag -compact
+.It Colvin Wellborn colvinwellborn@gmail.com
+.El
+.\" LICENSE
+.Sh LICENSE
+This program is provided under the terms of the BSD 2-Clause License.

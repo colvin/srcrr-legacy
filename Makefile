@@ -7,6 +7,8 @@ $(CURDIR)/srcrr:
 
 install: build
 	install -o root -g wheel -m 775 $(CURDIR)/srcrr /usr/local/bin/
+	mkdir -p /usr/local/share/man/man1
+	install -o root -g wheel -m 775 $(CURDIR)/srcrr.1 /usr/local/share/man/man1/srcrr.1
 
 clean:
 	-rm srcrr
