@@ -18,6 +18,7 @@ char *srcpath;
 char *request;
 
 int vflag = 0;
+int lflag = 0;
 
 int
 main(int argc, char *argv[])
@@ -26,7 +27,7 @@ main(int argc, char *argv[])
 
 	int ch;
 
-	while ((ch = getopt(argc, argv, "vh")) != -1) {
+	while ((ch = getopt(argc, argv, "vhl")) != -1) {
 		switch(ch) {
 		case 'h':
 			usage();
@@ -34,11 +35,14 @@ main(int argc, char *argv[])
 		case 'v':
 			vflag = 1;
 			break;
+		case 'l':
+			lflag = 1;
+			break;
 		}
 	}
 
 	request = argv[optind];
-	if (request == NULL) {
+	if ((!lflag) && (request == NULL)) {
 		usage();
 		exit(1);
 	}
@@ -63,6 +67,7 @@ void
 usage(void)
 {
 	printf("usage: %s [-vh] PROJECT\n", progname);
+	printf("       %s -l\n", progname);
 }
 
 char *
@@ -78,6 +83,13 @@ walk_dir(char *path)
 	}
 
 	while ((ent = readdir(dh)) != NULL) {
+		if (lflag) {
+			if ((strcmp(ent->d_name, ".") == 0) || ((strcmp(ent->d_name, "..")) == 0))
+			    continue;
+			printf("%s\n", ent->d_name);
+			continue;
+		}
+
 		if (strcmp(ent->d_name, request) == 0) {
 			if (asprintf(&proj, "%s/%s", path, ent->d_name) == -1)
 				exit(1); // out of memory
