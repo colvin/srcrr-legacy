@@ -66,8 +66,9 @@ main(int argc, char *argv[])
 void
 usage(void)
 {
-	printf("usage: %s [-vh] PROJECT\n", progname);
+	printf("usage: %s [-v] PROJECT_NAME\n", progname);
 	printf("       %s -l\n", progname);
+	printf("       %s -h\n", progname);
 }
 
 char *
