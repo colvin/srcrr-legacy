@@ -11,18 +11,24 @@ The `srcrr` utility walks each directory in the `SRCPATH` variable looking for
 a directory of the given project name. The search terminates as soon as a
 directory is found. If the directory is found, Bourne-shell compatible shell
 script is emitted on standard output. This shell script provides the necessary
-instructions for changing directories and running additional contextualization
-commands using the optional `.srcrrrc` file.
+instructions for changing the working directory to the project and loading a
+series of optional initialization files.
 
-The `src` shell function is provided in the `func.*` files, which can be added
-to your shell initialization file (eg, `$HOME/.bashrc`). This function invokes
-`srcrr` and executes the statements it emits in the current shell session.
+The system-wide file `/etc/srcrrrc` is checked first, followed by the user-wide
+`$HOME/.srcrrrc`, and finally the project-specific file `.srcrrrc` within the
+project directory. None of the files are required to exist.
 
-If the project directory contains a file named `.srcrrrc`, it will
-automatically be sourced into your current shell session. This provides the
-ability to run arbitrary setup operations when starting a development session:
-loading virtual environments, setting the terminal title, setting other
-environment variables, etc.
+The `src` shell function is provided in the `srcrr.inc.*` files, which can be
+added to or sourced by your shell initialization file (eg, `$HOME/.bashrc`).
+This function invokes `srcrr` and executes the statements it emits in the
+current shell session.
+
+The initialization files, if they exist, will be source into your current shell
+session. This provides the ability to run arbitrary setup operations when
+starting a development session: loading virtual environments, setting the
+terminal title, setting other environment variables, etc. Note that
+initialization files are sourced after changing the working directory into the
+project.
 
 If `srcrr` is not able to locate the given project directory, no output is
 produced. It is not an error for `SRCPATH` to contain a non-existent directory,
@@ -33,10 +39,12 @@ given.
 
 If I have projects in my home directory `$HOME/src` as well as in
 `/mnt/share/src`, I would set the `SRCPATH` environment variable in my shell
-configuration:
+configuration, and load the `src` wrapper function and tab-completion setup
+from the include file that was installed as `$HOME/.srcrr.inc`:
 
 ```
 export SRCPATH="$HOME/src:/mnt/share/src"
+test -f ~/.srcrr.inc && . ~/.srcrr.inc
 ```
 
 Using `srcrr`'s shell function wrapper, `src`, I can load my `foobar` project,

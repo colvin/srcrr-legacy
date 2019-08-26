@@ -1,3 +1,5 @@
+.\" srcrr
+.\" Copyright (c) 2019, Colvin Wellborn
 .Dd June 19, 2019
 .Dt SRCRR 1
 .\" NAME
@@ -7,7 +9,7 @@
 .\" SYNOPSIS
 .Sh SYNOPSIS
 .Nm
-.Op Fl v
+.Op Fl vSUP
 .Ar project_name
 .Nm
 .Fl l
@@ -21,9 +23,14 @@ searches a set of directories, defined in the
 environment variable, for a project directory matching the given
 .Ar project_name .
 Once found, it prints to standard output the shell commands necessary to change
-directories to that project and source an optional initialization file, if one
-exists, named
-.Pa .srcrrrc .
+directories to that project and source an optional series of initialization
+files if they exist: first, the system-wide file
+.Pa /etc/srcrrrc ,
+second the user-wide file
+.Pa $HOME/.srcrrrc ,
+and finally the project-specific file
+.Pa .srcrrc
+located within the project directory.
 .Pp
 The shell code emitted by this program can be loaded into the current shell
 session using
@@ -48,6 +55,12 @@ It is not an error for a non-existent directory to be listed in the
 print verbose information on standard error
 .It Fl l
 list all project directories
+.It Fl S
+ignore the system-wide file
+.It Fl U
+ignore the user-wide file
+.It Fl P
+ignore the project file
 .It Fl h
 display this help
 .El

@@ -1,3 +1,8 @@
+/*
+ * srcrr
+ * Copyright (c) 2019, Colvin Wellborn
+ */
+
 #define _GNU_SOURCE
 #include <dirent.h>
 #include <err.h>
@@ -9,6 +14,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#define VERSION "1.0.0"
+
+#define SOURCE_FILE_MAX 3
+
 void	usage(void);
 char	*walk_dir(char *);
 void	emit(char *);
@@ -16,9 +25,14 @@ void	emit(char *);
 const char *progname;
 char *srcpath;
 char *request;
+char *source_files[SOURCE_FILE_MAX];
+int source_file_cnt = 0;
 
 int vflag = 0;
 int lflag = 0;
+int Sflag = 0;
+int Uflag = 0;
+int Pflag = 0;
 
 int
 main(int argc, char *argv[])
@@ -27,16 +41,28 @@ main(int argc, char *argv[])
 
 	int ch;
 
-	while ((ch = getopt(argc, argv, "vhl")) != -1) {
+	while ((ch = getopt(argc, argv, "hVvlSUP")) != -1) {
 		switch(ch) {
 		case 'h':
 			usage();
+			exit(0);
+		case 'V':
+			printf("srcrr version %s\n", VERSION);
 			exit(0);
 		case 'v':
 			vflag = 1;
 			break;
 		case 'l':
 			lflag = 1;
+			break;
+		case 'S':
+			Sflag = 1;
+			break;
+		case 'U':
+			Uflag = 1;
+			break;
+		case 'P':
+			Pflag = 1;
 			break;
 		}
 	}
@@ -46,6 +72,15 @@ main(int argc, char *argv[])
 		usage();
 		exit(1);
 	}
+
+	if (!Sflag)
+		source_files[source_file_cnt++] = "/etc/srcrrrc";
+
+	if (!Uflag)
+		source_files[source_file_cnt++] = "$HOME/.srcrrrc";
+
+	if (!Pflag)
+		source_files[source_file_cnt++] = ".srcrrrc";
 
 	srcpath = getenv("SRCPATH");
 	if (srcpath == NULL)
@@ -66,7 +101,7 @@ main(int argc, char *argv[])
 void
 usage(void)
 {
-	printf("usage: %s [-v] PROJECT_NAME\n", progname);
+	printf("usage: %s [-vSUP] PROJECT_NAME\n", progname);
 	printf("       %s -l\n", progname);
 	printf("       %s -h\n", progname);
 }
@@ -106,5 +141,15 @@ walk_dir(char *path)
 void
 emit(char *proj)
 {
-	printf("cd %s ; test -f .srcrrrc && . .srcrrrc\n", proj);
+	printf("cd %s ;\n", proj);
+	if (source_file_cnt) {
+		printf("for i in ");
+		for (int i = 0; i < source_file_cnt; i++) {
+			printf(" %s", source_files[i]);
+		}
+		printf(" ;\n");
+		printf("do\n");
+		printf("\ttest -f $i && . $i ;\n");
+		printf("done\n");
+	}
 }

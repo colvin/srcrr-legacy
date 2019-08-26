@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# srcrr
+# Copyright (c) 2019, Colvin Wellborn
 
 set -e
 
@@ -9,9 +12,9 @@ PREFIX=$(readlink -f $(dirname $0))
 : ${SRCRR:="./srcrr"}
 export SRCPATH="$PREFIX/test/one:$PREFIX/test/two"
 
-. "$PREFIX"/func.bash
+. "$PREFIX"/srcrr.inc.bash
 
-src foo
+src -SU foo
 if [ -n "$TESTVAL" ]
 then
 	echo "PASS: TESTVAL is set"
@@ -30,7 +33,7 @@ fi
 cd $CURDIR
 unset TESTVAL
 
-src bar
+src -SU bar
 if [ -n "$TESTVAL" ]
 then
 	echo "PASS: TESTVAL is set"
