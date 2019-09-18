@@ -14,7 +14,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define VERSION "1.0.0"
+#define VERSION "1.0.1"
 
 #define SOURCE_FILE_MAX 3
 
@@ -101,9 +101,10 @@ main(int argc, char *argv[])
 void
 usage(void)
 {
-	printf("usage: %s [-vSUP] PROJECT_NAME\n", progname);
-	printf("       %s -l\n", progname);
-	printf("       %s -h\n", progname);
+	fprintf(stderr, "usage: %s [-vSUP] PROJECT_NAME\n", progname);
+	fprintf(stderr, "       %s -l\n", progname);
+	fprintf(stderr, "       %s -V\n", progname);
+	fprintf(stderr, "       %s -h\n", progname);
 }
 
 char *

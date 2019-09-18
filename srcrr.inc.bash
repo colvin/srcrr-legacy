@@ -5,6 +5,9 @@
 function src() {
 	: ${SRCRR:="srcrr"}
 	case "$1" in
+		-l)
+			$SRCRR -l $@
+			return;;
 		-V)
 			$SRCRR -V
 			return;;
